@@ -42,11 +42,17 @@ export default function LoadingScreen() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <Image src="/logo.png" alt="La Rosa Fleuriste" width={120} height={120} className="rounded-full drop-shadow-[0_0_30px_rgba(201,168,76,0.5)]" />
+            <Image
+              src="/logo.jpg"
+              alt="La Rosa Fleuriste"
+              width={120}
+              height={120}
+              className="rounded-full drop-shadow-[0_0_30px_rgba(201,168,76,0.5)]"
+            />
           </motion.div>
 
           <motion.p
-            className="font-cormorant italic text-blanc/50 text-xl mt-3 tracking-widest relative z-10"
+            className="font-cormorant italic text-blanc/50 text-xl mt-4 tracking-widest relative z-10"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -55,9 +61,7 @@ export default function LoadingScreen() {
           </motion.p>
 
           {/* Loading bar */}
-          <motion.div
-            className="mt-10 h-0.5 bg-or/30 rounded-full overflow-hidden w-32 relative z-10"
-          >
+          <motion.div className="mt-8 h-0.5 bg-or/30 rounded-full overflow-hidden w-32 relative z-10">
             <motion.div
               className="h-full bg-or rounded-full"
               initial={{ width: "0%" }}

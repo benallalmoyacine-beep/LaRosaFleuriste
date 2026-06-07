@@ -35,7 +35,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
           <Image
-            src="/logo.png"
+            src="/logo.jpg"
             alt="La Rosa Fleuriste"
             width={52}
             height={52}
