@@ -10,19 +10,15 @@ export default async function CataloguePage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-noir pt-24 pb-20">
+    <div className="min-h-screen bg-blanc pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <p className="font-cormorant italic text-or/60 text-base tracking-widest uppercase mb-2">
+        <div className="text-center mb-14">
+          <p className="font-jost text-xs tracking-[0.3em] uppercase text-muted mb-3">
             Notre collection
           </p>
-          <h1 className="font-playfair text-5xl md:text-6xl text-blanc mb-4">
-            Catalogue
-          </h1>
-          <div className="divider-or max-w-[160px] mx-auto" />
+          <h1 className="font-playfair text-5xl md:text-6xl text-noir mb-4">Catalogue</h1>
+          <div className="divider-or max-w-[100px] mx-auto" />
         </div>
-
         <CatalogueClient produits={produits} categories={categories} />
       </div>
     </div>

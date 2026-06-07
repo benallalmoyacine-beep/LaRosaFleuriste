@@ -8,12 +8,15 @@
 }
 
 @theme inline {
-  --color-noir: #0a0a0a;
+  --color-noir: #1c1c1c;
   --color-or: #c9a84c;
-  --color-rouge: #8b1a1a;
+  --color-rouge: #c4564a;
   --color-rose: #e8a4b8;
   --color-vert: #2d5016;
-  --color-blanc: #f5f0e8;
+  --color-blanc: #f9f7f5;
+  --color-surface: #ffffff;
+  --color-muted: #767676;
+  --color-border: #e5ddd5;
   --font-cormorant: var(--font-cormorant);
   --font-playfair: var(--font-playfair);
   --font-jost: var(--font-jost);
@@ -31,8 +34,8 @@ html {
 }
 
 body {
-  background-color: #0a0a0a;
-  color: #f5f0e8;
+  background-color: #f9f7f5;
+  color: #1c1c1c;
   font-family: var(--font-jost), sans-serif;
   min-height: 100vh;
 }
@@ -43,26 +46,29 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #f9f7f5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9a84c55;
+  background: #e5ddd5;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c9a84c;
 }
 
-/* Gold divider utility */
 .divider-or {
   height: 1px;
   background: linear-gradient(to right, transparent, #c9a84c, transparent);
 }
 
-/* Text gradient or */
+.divider-light {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e5ddd5, transparent);
+}
+
 .text-gradient-or {
   background: linear-gradient(135deg, #c9a84c, #e8c97a, #c9a84c);
   -webkit-background-clip: text;

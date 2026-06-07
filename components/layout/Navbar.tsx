@@ -20,37 +20,40 @@ export default function Navbar() {
   const { totalItems, setDrawerOpen } = useCart();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-noir/95 backdrop-blur-md border-b border-or/20 shadow-lg shadow-noir/50" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-sm shadow-sm border-b border-border"
+          : "bg-white border-b border-border"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <Image
             src="/logo.jpg"
             alt="La Rosa Fleuriste"
-            width={52}
-            height={52}
+            width={44}
+            height={44}
             className="rounded-full"
             priority
           />
+          <span className="font-vibes text-2xl text-noir hidden sm:block">La Rosa</span>
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden md:flex items-center gap-10">
           {links.map((l) => (
             <li key={l.href}>
               <Link
                 href={l.href}
-                className="font-jost text-sm tracking-widest uppercase text-blanc/70 hover:text-or transition-colors duration-300"
+                className="font-jost text-xs tracking-widest uppercase text-muted hover:text-noir transition-colors duration-200"
               >
                 {l.label}
               </Link>
@@ -59,26 +62,26 @@ export default function Navbar() {
         </ul>
 
         {/* Cart + hamburger */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setDrawerOpen(true)}
-            className="relative p-2 text-blanc/70 hover:text-or transition-colors"
+            className="relative p-2 text-muted hover:text-noir transition-colors"
             aria-label="Ouvrir le panier"
           >
-            <ShoppingCart size={22} />
+            <ShoppingCart size={20} />
             {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-rouge text-blanc text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 bg-rouge text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {totalItems > 9 ? "9+" : totalItems}
               </span>
             )}
           </button>
 
           <button
-            className="md:hidden p-2 text-blanc/70 hover:text-or transition-colors"
+            className="md:hidden p-2 text-muted hover:text-noir transition-colors"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Menu"
           >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </nav>
@@ -90,20 +93,20 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-noir/98 border-t border-or/20"
+            className="md:hidden bg-white border-t border-border"
           >
-            <ul className="flex flex-col py-4">
+            <ul className="flex flex-col py-2">
               {links.map((l, i) => (
                 <motion.li
                   key={l.href}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07 }}
+                  transition={{ delay: i * 0.05 }}
                 >
                   <Link
                     href={l.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block px-6 py-3 font-jost text-sm tracking-widest uppercase text-blanc/70 hover:text-or hover:bg-or/5 transition-colors"
+                    className="block px-6 py-3 font-jost text-xs tracking-widest uppercase text-muted hover:text-noir hover:bg-blanc transition-colors"
                   >
                     {l.label}
                   </Link>

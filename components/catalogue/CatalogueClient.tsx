@@ -19,31 +19,34 @@ export default function CatalogueClient({ produits, categories }: Props) {
 
   return (
     <div>
-      {/* Category filter pills */}
-      <div className="flex flex-wrap gap-2 mb-10">
+      {/* Filters */}
+      <div className="flex flex-wrap gap-1 mb-10 border-b border-border pb-4">
         <button
           onClick={() => setSelected(null)}
-          className={`px-4 py-1.5 text-sm font-jost tracking-widest uppercase border transition-all ${
+          className={`px-4 py-2 text-xs font-jost tracking-widest uppercase transition-all ${
             selected === null
-              ? "border-or bg-or text-noir"
-              : "border-or/30 text-or/60 hover:border-or hover:text-or"
+              ? "text-noir border-b-2 border-noir"
+              : "text-muted hover:text-noir"
           }`}
         >
-          Tout
+          Tout ({produits.length})
         </button>
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setSelected(selected === cat.id ? null : cat.id)}
-            className={`px-4 py-1.5 text-sm font-jost tracking-widest uppercase border transition-all ${
-              selected === cat.id
-                ? "border-or bg-or text-noir"
-                : "border-or/30 text-or/60 hover:border-or hover:text-or"
-            }`}
-          >
-            {cat.nom}
-          </button>
-        ))}
+        {categories.map((cat) => {
+          const count = produits.filter((p) => p.categorie.includes(cat.id)).length;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setSelected(selected === cat.id ? null : cat.id)}
+              className={`px-4 py-2 text-xs font-jost tracking-widest uppercase transition-all ${
+                selected === cat.id
+                  ? "text-noir border-b-2 border-noir"
+                  : "text-muted hover:text-noir"
+              }`}
+            >
+              {cat.nom} ({count})
+            </button>
+          );
+        })}
       </div>
 
       {/* Grid */}
@@ -53,14 +56,16 @@ export default function CatalogueClient({ produits, categories }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          transition={{ duration: 0.25 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
         >
           {filtered.length > 0 ? (
             filtered.map((p) => <ProductCard key={p.id} produit={p} />)
           ) : (
-            <div className="col-span-full text-center py-20 text-blanc/30 font-cormorant italic text-xl">
-              Aucun produit dans cette catégorie pour le moment.
+            <div className="col-span-full text-center py-20">
+              <p className="font-cormorant italic text-muted text-xl">
+                Aucun produit dans cette catégorie pour le moment.
+              </p>
             </div>
           )}
         </motion.div>

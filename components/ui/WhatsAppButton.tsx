@@ -10,20 +10,15 @@ export default function WhatsAppButton() {
       href={`https://wa.me/${number}`}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Commander sur WhatsApp"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-[#25D366] text-white rounded-full shadow-lg shadow-black/40 px-4 py-3 font-jost text-sm font-medium"
+      aria-label="Commander sur WhatsApp — La Rosa Fleuriste"
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-[#25D366] text-white shadow-lg px-4 py-3 font-jost text-xs font-medium"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: 2, type: "spring", stiffness: 300 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      transition={{ delay: 1.8, type: "spring", stiffness: 300 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
-      <motion.span
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-      >
-        <MessageCircle size={20} fill="white" />
-      </motion.span>
+      <MessageCircle size={18} fill="white" />
       <span className="hidden sm:inline">Commander</span>
     </motion.a>
   );
