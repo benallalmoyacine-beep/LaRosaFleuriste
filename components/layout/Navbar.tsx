@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
@@ -32,8 +33,15 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <Link href="/" className="font-vibes text-3xl md:text-4xl text-or hover:text-or/80 transition-colors">
-          La Rosa
+        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+          <Image
+            src="/logo.png"
+            alt="La Rosa Fleuriste"
+            width={52}
+            height={52}
+            className="rounded-full"
+            priority
+          />
         </Link>
 
         {/* Desktop links */}

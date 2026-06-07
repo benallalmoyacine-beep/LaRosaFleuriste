@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoadingScreen() {
@@ -35,14 +36,14 @@ export default function LoadingScreen() {
             ))}
           </div>
 
-          <motion.p
-            className="font-vibes text-6xl md:text-8xl text-or relative z-10"
+          <motion.div
+            className="relative z-10"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            La Rosa
-          </motion.p>
+            <Image src="/logo.png" alt="La Rosa Fleuriste" width={120} height={120} className="rounded-full drop-shadow-[0_0_30px_rgba(201,168,76,0.5)]" />
+          </motion.div>
 
           <motion.p
             className="font-cormorant italic text-blanc/50 text-xl mt-3 tracking-widest relative z-10"

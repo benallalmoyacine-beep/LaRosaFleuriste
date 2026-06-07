@@ -32,12 +32,18 @@ export default function AProposPage() {
         <div className="border border-or/20 p-8 md:p-12 bg-blanc/[0.02] relative">
           {/* Quote decoration */}
           <span className="absolute top-6 left-8 font-vibes text-6xl text-or/20 leading-none select-none">"</span>
-          <p className="font-cormorant italic text-blanc/70 text-xl md:text-2xl leading-relaxed text-center relative z-10">
-            La Rosa Fleuriste, c&apos;est une passion de famille ancrée au cœur de Tlemcen. Depuis nos débuts,
-            nous mettons toute notre âme dans chaque bouquet, chaque arrangement, chaque sourire que nos fleurs
-            apportent. Fleurs d&apos;amour, de célébration, de condoléances — nous sommes là pour chaque moment
-            de votre vie.
-          </p>
+          <div className="relative z-10 text-center space-y-5">
+            <p className="font-cormorant italic text-blanc/80 text-2xl md:text-3xl leading-relaxed">
+              Fleuriste à Tlemcen — depuis toujours.
+            </p>
+            <p className="font-cormorant italic text-blanc/60 text-lg md:text-xl leading-relaxed">
+              Une passion de famille · Fleurs, amour &amp; sourires.
+            </p>
+            <div className="divider-or max-w-[120px] mx-auto" />
+            <p className="font-jost text-blanc/40 text-sm tracking-widest uppercase">
+              Livraison disponible dans 58 wilayas
+            </p>
+          </div>
           <span className="absolute bottom-4 right-8 font-vibes text-6xl text-or/20 leading-none select-none rotate-180">"</span>
 
           {/* Corner accents */}

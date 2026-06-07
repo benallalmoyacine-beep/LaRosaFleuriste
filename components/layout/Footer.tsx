@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MessageCircle, MapPin, Phone, Clock } from "lucide-react";
 
 function IconInstagram({ size = 18 }: { size?: number }) {
@@ -27,7 +28,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <p className="font-vibes text-5xl text-or mb-3">La Rosa</p>
+            <Image src="/logo.png" alt="La Rosa Fleuriste" width={64} height={64} className="rounded-full mb-2" />
             <p className="font-cormorant italic text-blanc/60 text-lg leading-relaxed">
               Une passion de famille<br />Fleurs, amour &amp; sourires
             </p>
