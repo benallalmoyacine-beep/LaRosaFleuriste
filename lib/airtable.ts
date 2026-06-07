@@ -58,7 +58,8 @@ function field<T>(obj: Record<string, unknown>, key: string, fallback: T): T {
 export async function getProduits(): Promise<Produit[]> {
   const params = new URLSearchParams({
     filterByFormula: "AND({Actif}=1)",
-    sort: JSON.stringify([{ field: "Ordre", direction: "asc" }]),
+    "sort[0][field]": "Ordre",
+    "sort[0][direction]": "asc",
   }).toString();
 
   const raw = await fetchAll(T_PRODUITS, `?${params}`);
@@ -90,7 +91,8 @@ export async function getProduitBySlug(slug: string): Promise<Produit | null> {
 export async function getCategories(): Promise<Categorie[]> {
   const params = new URLSearchParams({
     filterByFormula: "AND({Actif}=1)",
-    sort: JSON.stringify([{ field: "Ordre", direction: "asc" }]),
+    "sort[0][field]": "Ordre",
+    "sort[0][direction]": "asc",
   }).toString();
 
   const raw = await fetchAll(T_CATEGORIES, `?${params}`);
@@ -106,7 +108,8 @@ export async function getCategories(): Promise<Categorie[]> {
 export async function getLivraison(): Promise<Livraison[]> {
   const params = new URLSearchParams({
     filterByFormula: "AND({Actif}=1)",
-    sort: JSON.stringify([{ field: "Wilaya_Num", direction: "asc" }]),
+    "sort[0][field]": "Wilaya_Num",
+    "sort[0][direction]": "asc",
   }).toString();
 
   const raw = await fetchAll(T_LIVRAISON, `?${params}`);
