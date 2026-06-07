@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+:root {
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-jost: "Jost", sans-serif;
+  --font-vibes: "Great Vibes", cursive;
+}
+
+@theme inline {
+  --color-noir: #0a0a0a;
+  --color-or: #c9a84c;
+  --color-rouge: #8b1a1a;
+  --color-rose: #e8a4b8;
+  --color-vert: #2d5016;
+  --color-blanc: #f5f0e8;
+  --font-cormorant: var(--font-cormorant);
+  --font-playfair: var(--font-playfair);
+  --font-jost: var(--font-jost);
+  --font-vibes: var(--font-vibes);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #f5f0e8;
+  font-family: var(--font-jost), sans-serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background-color: #c9a84c33;
+  color: #c9a84c;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9a84c55;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9a84c;
+}
+
+/* Gold divider utility */
+.divider-or {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c9a84c, transparent);
+}
+
+/* Text gradient or */
+.text-gradient-or {
+  background: linear-gradient(135deg, #c9a84c, #e8c97a, #c9a84c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
