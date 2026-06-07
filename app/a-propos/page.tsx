@@ -41,7 +41,7 @@ export default function AProposPage() {
             </p>
             <div className="divider-or max-w-[120px] mx-auto" />
             <p className="font-jost text-blanc/40 text-sm tracking-widest uppercase">
-              Livraison disponible dans 58 wilayas
+              Livraison disponible dans 69 wilayas
             </p>
           </div>
           <span className="absolute bottom-4 right-8 font-vibes text-6xl text-or/20 leading-none select-none rotate-180">"</span>
