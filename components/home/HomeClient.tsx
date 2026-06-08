@@ -19,8 +19,8 @@ export default function HomeClient({ produits, categories, vitrineProds }: Props
     <div>
 
       {/* ══ SECTION CATÉGORIES ══ */}
-      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <div className="text-center mb-5 sm:mb-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 pb-3 sm:pt-6 sm:pb-4">
+        <div className="text-center mb-4 sm:mb-6">
           <p className="font-jost text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
             Parcourir par
           </p>
@@ -77,8 +77,8 @@ export default function HomeClient({ produits, categories, vitrineProds }: Props
       {vitrineProds.length > 0 && <VitrineDore produits={vitrineProds} />}
 
       {/* ══ SECTION PRODUITS ══ */}
-      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <div className="text-center mb-5 sm:mb-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 pb-6 sm:pt-4 sm:pb-10">
+        <div className="text-center mb-4 sm:mb-6">
           <p className="font-jost text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
             Notre collection
           </p>
