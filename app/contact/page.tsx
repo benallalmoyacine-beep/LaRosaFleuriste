@@ -71,24 +71,26 @@ export default async function ContactPage() {
 
               <div className="flex items-start gap-3">
                 <MapPin size={16} className="text-or mt-0.5 shrink-0" />
-                <p className="font-jost text-sm text-muted">{config.adresse}</p>
+                <p className="font-jost text-sm text-muted">Tlemcen, Alg&eacute;rie</p>
               </div>
 
               <div className="flex items-center gap-3">
                 <Phone size={16} className="text-or shrink-0" />
                 <a
-                  href={`https://wa.me/${config.telephoneWhatsApp}`}
+                  href="https://wa.me/213791112663"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-jost text-sm text-muted hover:text-noir transition-colors"
                 >
-                  +{config.telephoneWhatsApp}
+                  +213 791 112 663
                 </a>
               </div>
 
               <div className="flex items-start gap-3">
                 <Clock size={16} className="text-or mt-0.5 shrink-0" />
-                <p className="font-jost text-sm text-muted whitespace-pre-line">{config.horaires}</p>
+                <p className="font-jost text-sm text-muted">
+                  Lun&ndash;Sam 8h&ndash;20h &middot; Dim 9h&ndash;18h
+                </p>
               </div>
             </div>
 
