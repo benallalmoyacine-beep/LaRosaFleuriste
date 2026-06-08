@@ -128,7 +128,7 @@ export async function getConfig(): Promise<Config> {
   const r = raw[0] ?? {};
   return {
     telephoneWhatsApp: field(r, "Telephone_WhatsApp", "213791112663"),
-    slogan: field(r, "Slogan", "Une passion de famille • Fleurs, amour & sourires"),
+    slogan: field(r, "Slogan", "Une passion de famille"),
     lienInstagram: field(r, "Lien_Instagram", "https://www.instagram.com/la_rosa_fleuriste_tlemcen/"),
     lienFacebook: field(r, "Lien_Facebook", "https://www.facebook.com/profile.php?id=100091832552880"),
     lienTikTok: field(r, "Lien_TikTok", "https://www.tiktok.com/@lavieestbelle6581"),
