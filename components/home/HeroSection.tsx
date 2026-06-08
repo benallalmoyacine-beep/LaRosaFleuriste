@@ -14,11 +14,8 @@ const line: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.9 } },
 };
 
-interface Props {
-  slogan: string;
-}
 
-export default function HeroSection({ slogan }: Props) {
+export default function HeroSection() {
   return (
     <section className="relative min-h-screen bg-blanc flex items-center justify-center overflow-hidden">
       {/* Pétales bordeaux tombants */}
@@ -72,22 +69,6 @@ export default function HeroSection({ slogan }: Props) {
           transition={{ delay: 0.9, duration: 0.8 }}
         />
 
-        {/* Slogan — séparateur CSS pour éviter les problèmes d'encodage */}
-        <motion.p
-          variants={line}
-          className="font-cormorant italic text-muted text-xl md:text-2xl leading-relaxed mb-10 max-w-md mx-auto"
-        >
-          {slogan.split("•").map((part, i, arr) => (
-            <span key={i}>
-              {part.trim()}
-              {i < arr.length - 1 && (
-                <span className="inline-block mx-2 text-or not-italic text-base leading-none" aria-hidden="true">
-                  ✦
-                </span>
-              )}
-            </span>
-          ))}
-        </motion.p>
 
         {/* CTAs */}
         <motion.div
