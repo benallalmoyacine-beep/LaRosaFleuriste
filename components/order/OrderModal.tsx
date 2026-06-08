@@ -64,7 +64,7 @@ export default function OrderModal({ isOpen, onClose }: Props) {
           wilayaNum: selectedLivraison.wilayaNum,
           modeLivraison: mode,
           note,
-          produits: items.map((i) => ({ nom: i.nom, qty: i.qty, prix: i.prix })),
+          produits: items.map((i) => ({ nom: i.nom, qty: i.qty, prix: i.prix, taille: i.taille, couleur: i.couleur, details: i.details })),
           sousTotal: totalPrice,
           fraisLivraison: frais,
           total,
@@ -128,9 +128,16 @@ export default function OrderModal({ isOpen, onClose }: Props) {
                   <div className="bg-blanc border border-border p-4 space-y-2">
                     <p className="font-jost text-xs tracking-widest uppercase text-muted mb-3">Récapitulatif</p>
                     {items.map((item) => (
-                      <div key={item.id} className="flex justify-between text-sm">
-                        <span className="font-cormorant italic text-muted">{item.nom} × {item.qty}</span>
-                        <span className="font-jost text-noir">{(item.prix * item.qty).toLocaleString("fr-DZ")} DZD</span>
+                      <div key={item.id} className="flex justify-between text-sm gap-2">
+                        <div className="min-w-0">
+                          <span className="font-cormorant italic text-muted">{item.nom} × {item.qty}</span>
+                          {(item.taille || item.couleur) && (
+                            <p className="font-jost text-[10px] text-muted">
+                              {[item.taille, item.couleur].filter(Boolean).join(" · ")}
+                            </p>
+                          )}
+                        </div>
+                        <span className="font-jost text-noir shrink-0">{(item.prix * item.qty).toLocaleString("fr-DZ")} DZD</span>
                       </div>
                     ))}
                     <div className="divider-light my-2" />

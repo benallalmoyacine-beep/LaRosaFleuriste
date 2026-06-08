@@ -26,7 +26,14 @@ export async function POST(req: NextRequest) {
 
   // Build WhatsApp message
   const lignesProduits = produits
-    .map((p) => `• ${p.nom} × ${p.qty} → ${(p.prix * p.qty).toLocaleString("fr-DZ")} DZD`)
+    .map((p) => {
+      const ext = p as { details?: string; taille?: string; couleur?: string };
+      const options = [ext.taille, ext.couleur].filter(Boolean).join(" · ");
+      const ligne = `• ${p.nom} × ${p.qty} → ${(p.prix * p.qty).toLocaleString("fr-DZ")} DZD`;
+      if (options) return `${ligne}\n  ↳ ${options}`;
+      if (ext.details) return `${ligne}\n  ↳ ${ext.details}`;
+      return ligne;
+    })
     .join("\n");
 
   const message = `🌹 Nouvelle Commande — La Rosa Fleuriste

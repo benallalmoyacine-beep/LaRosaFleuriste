@@ -15,6 +15,8 @@ export interface Produit {
   categorie: string[];       // IDs des catégories liées
   categorieNom?: string;     // résolu après join
   disponibilite: "En stock" | "Sur commande" | "Rupture";
+  tailles: string[];
+  couleurs: string[];
   vitrine: boolean;
   vitrineOrdre: number;
   ordre: number;
@@ -50,6 +52,24 @@ export interface Config {
   horaires: string;
   noteGoogle: number;
   nbAvis: number;
+}
+
+export interface Fleur {
+  id: string;
+  nom: string;
+  couleur: string;
+  prixUnitaire: number;
+  stockDisponible: number;
+  photos: AirtablePhoto[];
+  actif: boolean;
+}
+
+export interface Emballage {
+  id: string;
+  nom: string;
+  prix: number;
+  photos: AirtablePhoto[];
+  actif: boolean;
 }
 
 export interface CommandeInput {

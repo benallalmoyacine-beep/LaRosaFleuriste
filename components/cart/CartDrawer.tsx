@@ -80,6 +80,14 @@ export default function CartDrawer() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-playfair text-noir text-sm truncate">{item.nom}</p>
+                        {(item.taille || item.couleur) && (
+                          <p className="font-jost text-muted text-[10px] mt-0.5">
+                            {[item.taille, item.couleur].filter(Boolean).join(" · ")}
+                          </p>
+                        )}
+                        {item.details && !item.taille && !item.couleur && (
+                          <p className="font-cormorant italic text-muted text-xs leading-tight mt-0.5 line-clamp-2">{item.details}</p>
+                        )}
                         <p className="font-jost text-muted text-xs mt-0.5">{item.prix.toLocaleString("fr-DZ")} DZD</p>
                         <div className="flex items-center gap-2 mt-2">
                           <button onClick={() => updateQty(item.id, item.qty - 1)} className="p-1 border border-border text-muted hover:text-noir hover:border-noir transition-colors">

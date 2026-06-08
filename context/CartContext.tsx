@@ -3,11 +3,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export interface CartItem {
-  id: string;
+  id: string;       // peut être composite: produitId|taille|couleur
   nom: string;
   prix: number;
   photo?: string;
   qty: number;
+  taille?: string;
+  couleur?: string;
+  details?: string; // composition du bouquet personnalisé
 }
 
 interface CartContextValue {

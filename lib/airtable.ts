@@ -1,4 +1,4 @@
-import type { Produit, Categorie, Livraison, Config, CommandeInput } from "@/types/airtable";
+import type { Produit, Categorie, Livraison, Config, CommandeInput, Fleur, Emballage } from "@/types/airtable";
 
 const TOKEN = process.env.AIRTABLE_TOKEN!;
 const BASE = process.env.AIRTABLE_BASE_ID || "appYbWQmjMVB7riZT";
@@ -9,6 +9,8 @@ const T_CATEGORIES = process.env.AIRTABLE_T_CATEGORIES || "Categories";
 const T_LIVRAISON = process.env.AIRTABLE_T_LIVRAISON || "Livraison";
 const T_CONFIG = process.env.AIRTABLE_T_CONFIG || "Config";
 const T_COMMANDES = process.env.AIRTABLE_T_COMMANDES || "Commandes";
+const T_FLEURS = process.env.AIRTABLE_T_FLEURS || "Fleurs";
+const T_EMBALLAGES = process.env.AIRTABLE_T_EMBALLAGES || "Emballages";
 
 function headers() {
   return { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
@@ -75,6 +77,8 @@ export async function getProduits(): Promise<Produit[]> {
     })),
     categorie: field(r, "Categorie", []),
     disponibilite: (field(r, "Disponibilite", "En stock") || "En stock") as Produit["disponibilite"],
+    tailles: field(r, "Taille", []) as string[],
+    couleurs: field(r, "Couleur", []) as string[],
     vitrine: field(r, "Vitrine", false),
     vitrineOrdre: field(r, "Vitrine_Ordre", 99),
     ordre: field(r, "Ordre", 99),
@@ -178,4 +182,49 @@ export async function createCommande(data: CommandeInput): Promise<string> {
 
   const json = (await res.json()) as { records: { id: string }[] };
   return json.records[0].id;
+}
+
+export async function getFleurs(): Promise<Fleur[]> {
+  const params = new URLSearchParams({
+    filterByFormula: "AND({Actif}=1)",
+    "sort[0][field]": "Nom",
+    "sort[0][direction]": "asc",
+  }).toString();
+
+  const raw = await fetchAll(T_FLEURS, `?${params}`);
+  return raw.map((r) => ({
+    id: field(r, "id", ""),
+    nom: field(r, "Nom", ""),
+    couleur: field(r, "Couleur", ""),
+    prixUnitaire: field(r, "Prix_Unitaire", 0),
+    stockDisponible: field(r, "Stock_Disponible", 99),
+    photos: (field(r, "Photos", []) as { id: string; url: string; filename: string }[]).map((p) => ({
+      id: p.id, url: p.url, filename: p.filename,
+    })),
+    actif: field(r, "Actif", false),
+  }));
+}
+
+export async function getEmballages(): Promise<Emballage[]> {
+  const params = new URLSearchParams({
+    filterByFormula: "AND({Actif}=1)",
+    "sort[0][field]": "Nom",
+    "sort[0][direction]": "asc",
+  }).toString();
+
+  try {
+    const raw = await fetchAll(T_EMBALLAGES, `?${params}`);
+    return raw.map((r) => ({
+      id: field(r, "id", ""),
+      nom: field(r, "Nom", ""),
+      prix: field(r, "Prix", 0),
+      photos: (field(r, "Photos", []) as { id: string; url: string; filename: string }[]).map((p) => ({
+        id: p.id, url: p.url, filename: p.filename,
+      })),
+      actif: field(r, "Actif", false),
+    }));
+  } catch {
+    // Table optionnelle
+    return [];
+  }
 }
