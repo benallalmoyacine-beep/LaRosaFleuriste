@@ -11,9 +11,9 @@ const config: Config = {
       colors: {
         noir: "#1c1c1c",
         or: "#c9a84c",
-        rouge: "#c4564a",
-        rose: "#e8a4b8",
-        vert: "#2d5016",
+        rouge: "#c73967",
+        rose: "#f2b8cb",
+        vert: "#3a7d1e",
         blanc: "#f9f7f5",
         surface: "#ffffff",
         muted: "#767676",

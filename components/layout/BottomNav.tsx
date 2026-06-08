@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Grid3x3, Flower2, Info, Phone } from "lucide-react";
+import { Home, Flower2, Info, Phone } from "lucide-react";
 
 const links = [
   { href: "/", label: "Accueil", Icon: Home },
