@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Share2 } from "lucide-react";
+import { openSocial, SOCIAL } from "@/lib/socialLinks";
 
 function IconWhatsApp() {
   return (
@@ -38,28 +39,32 @@ function IconTikTok() {
 const socials = [
   {
     key: "whatsapp",
-    href: "https://wa.me/213791112663",
+    app: SOCIAL.whatsapp.app,
+    web: SOCIAL.whatsapp.web,
     label: "WhatsApp",
     icon: <IconWhatsApp />,
     color: "bg-[#25D366] text-white",
   },
   {
     key: "instagram",
-    href: "https://www.instagram.com/la_rosa_fleuriste_tlemcen/",
+    app: SOCIAL.instagram.app,
+    web: SOCIAL.instagram.web,
     label: "Instagram",
     icon: <IconInstagram />,
     color: "bg-gradient-to-br from-purple-500 to-pink-500 text-white",
   },
   {
     key: "facebook",
-    href: "https://www.facebook.com/profile.php?id=100091832552880",
+    app: SOCIAL.facebook.app,
+    web: SOCIAL.facebook.web,
     label: "Facebook",
     icon: <IconFacebook />,
     color: "bg-[#1877F2] text-white",
   },
   {
     key: "tiktok",
-    href: "https://www.tiktok.com/@lavieestbelle6581",
+    app: SOCIAL.tiktok.app,
+    web: SOCIAL.tiktok.web,
     label: "TikTok",
     icon: <IconTikTok />,
     color: "bg-noir text-white",
@@ -96,16 +101,14 @@ export default function FloatingMenu() {
                   style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
                   {s.label}
                 </span>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setOpen(false)}
+                <button
+                  onClick={() => { setOpen(false); openSocial(s.app, s.web); }}
                   className={`w-11 h-11 rounded-full flex items-center justify-center shadow-md ${s.color}`}
                   style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}
+                  aria-label={s.label}
                 >
                   {s.icon}
-                </a>
+                </button>
               </motion.div>
             ))}
           </>

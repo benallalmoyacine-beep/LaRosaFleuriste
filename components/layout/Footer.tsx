@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MessageCircle, MapPin, Phone, Clock } from "lucide-react";
+import { openSocial, SOCIAL } from "@/lib/socialLinks";
 
 function IconInstagram({ size = 16 }: { size?: number }) {
   return (
@@ -37,20 +40,18 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { href: "https://www.instagram.com/la_rosa_fleuriste_tlemcen/", icon: <IconInstagram />, label: "Instagram" },
-                { href: "https://www.facebook.com/profile.php?id=100091832552880", icon: <IconFacebook />, label: "Facebook" },
-                { href: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`, icon: <MessageCircle size={16} />, label: "WhatsApp" },
+                { app: SOCIAL.instagram.app, web: SOCIAL.instagram.web, icon: <IconInstagram />, label: "Instagram" },
+                { app: SOCIAL.facebook.app, web: SOCIAL.facebook.web, icon: <IconFacebook />, label: "Facebook" },
+                { app: SOCIAL.whatsapp.app, web: SOCIAL.whatsapp.web, icon: <MessageCircle size={16} />, label: "WhatsApp" },
               ].map((s) => (
-                <a
-                  key={s.href}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  key={s.label}
+                  onClick={() => openSocial(s.app, s.web)}
                   aria-label={s.label}
                   className="w-8 h-8 border border-border flex items-center justify-center text-muted hover:text-noir hover:border-noir transition-colors"
                 >
                   {s.icon}
-                </a>
+                </button>
               ))}
             </div>
           </div>

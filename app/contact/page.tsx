@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getConfig } from "@/lib/airtable";
 import { MapPin, Phone, Clock } from "lucide-react";
+import SocialLinks from "@/components/contact/SocialLinks";
 
 export const metadata: Metadata = {
   title: "Contact — La Rosa Fleuriste",
@@ -9,29 +10,6 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-function IconTikTok({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
-    </svg>
-  );
-}
-function IconFacebook({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-    </svg>
-  );
-}
-function IconInstagram({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="2" y="2" width="20" height="20" rx="5"/>
-      <circle cx="12" cy="12" r="4"/>
-      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-    </svg>
-  );
-}
 
 export default async function ContactPage() {
   const config = await getConfig().catch(() => ({
@@ -99,26 +77,7 @@ export default async function ContactPage() {
               <h2 className="font-playfair text-xl md:text-2xl text-noir mb-5">
                 R&eacute;seaux sociaux
               </h2>
-              <div className="flex flex-col gap-3">
-                {[
-                  { href: config.lienInstagram, label: "@la_rosa_fleuriste_tlemcen", Icon: IconInstagram },
-                  { href: config.lienFacebook, label: "La Rosa Fleuriste", Icon: IconFacebook },
-                  { href: config.lienTikTok, label: "@lavieestbelle6581", Icon: IconTikTok },
-                ].map(({ href, label, Icon }) => (
-                  <a
-                    key={href}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-muted hover:text-noir transition-colors group"
-                  >
-                    <span className="p-2 border border-border group-hover:border-noir transition-colors">
-                      <Icon size={15} />
-                    </span>
-                    <span className="font-jost text-sm">{label}</span>
-                  </a>
-                ))}
-              </div>
+              <SocialLinks />
             </div>
 
             {/* CTA WhatsApp */}
