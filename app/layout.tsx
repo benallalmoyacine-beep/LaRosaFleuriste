@@ -55,7 +55,7 @@ export default function RootLayout({
       lang="fr"
       className={`${cormorant.variable} ${playfair.variable} ${jost.variable} ${vibes.variable}`}
     >
-      <body className="bg-noir text-blanc font-jost min-h-screen antialiased">
+      <body className="bg-blanc text-noir font-jost min-h-screen antialiased">
         <CartProvider>
           <LoadingScreen />
           <Navbar />

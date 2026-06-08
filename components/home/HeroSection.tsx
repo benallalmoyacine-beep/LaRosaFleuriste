@@ -72,12 +72,21 @@ export default function HeroSection({ slogan }: Props) {
           transition={{ delay: 0.9, duration: 0.8 }}
         />
 
-        {/* Slogan en italique */}
+        {/* Slogan — séparateur CSS pour éviter les problèmes d'encodage */}
         <motion.p
           variants={line}
           className="font-cormorant italic text-muted text-xl md:text-2xl leading-relaxed mb-10 max-w-md mx-auto"
         >
-          {slogan}
+          {slogan.split("•").map((part, i, arr) => (
+            <span key={i}>
+              {part.trim()}
+              {i < arr.length - 1 && (
+                <span className="inline-block mx-2 text-or not-italic text-base leading-none" aria-hidden="true">
+                  ✦
+                </span>
+              )}
+            </span>
+          ))}
         </motion.p>
 
         {/* CTAs */}

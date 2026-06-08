@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, Home, Building2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { WILAYAS } from "@/data/wilayas";
 import type { Livraison } from "@/types/airtable";
 
 interface Props {
@@ -16,42 +15,70 @@ type Mode = "Domicile" | "Bureau";
 
 export default function OrderModal({ isOpen, onClose }: Props) {
   const { items, totalPrice, clearCart } = useCart();
+
   const [nom, setNom] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [wilayaCode, setWilayaCode] = useState<number | "">("");
+  const [wilayaId, setWilayaId] = useState<string>("");
   const [mode, setMode] = useState<Mode>("Domicile");
   const [note, setNote] = useState("");
   const [livraisons, setLivraisons] = useState<Livraison[]>([]);
+  const [loadingWilayas, setLoadingWilayas] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  // Chargement des wilayas depuis Airtable (via /api/livraison)
   useEffect(() => {
-    if (!isOpen) return;
-    fetch("/api/livraison").then((r) => r.json()).then(setLivraisons).catch(() => {});
-  }, [isOpen]);
+    if (!isOpen || livraisons.length > 0) return;
+    setLoadingWilayas(true);
+    fetch("/api/livraison")
+      .then((r) => r.json())
+      .then((data: Livraison[]) => setLivraisons(data))
+      .catch(() => {})
+      .finally(() => setLoadingWilayas(false));
+  }, [isOpen, livraisons.length]);
 
-  const selectedWilaya = wilayaCode ? WILAYAS.find((w) => w.code === wilayaCode) : null;
-  const livraisonRow = livraisons.find((l) => l.wilayaNom.toLowerCase() === selectedWilaya?.nom.toLowerCase());
-  const frais = livraisonRow ? (mode === "Domicile" ? livraisonRow.prixDomicile : livraisonRow.prixBureau) : 0;
+  // Wilaya sélectionnée
+  const selectedLivraison = livraisons.find((l) => l.id === wilayaId) ?? null;
+  const frais = selectedLivraison
+    ? mode === "Domicile"
+      ? selectedLivraison.prixDomicile
+      : selectedLivraison.prixBureau
+    : 0;
   const total = totalPrice + frais;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nom || !telephone || !wilayaCode) return;
+    if (!nom || !telephone || !wilayaId || !selectedLivraison) return;
     setLoading(true);
     setError("");
+
     try {
       const res = await fetch("/api/commandes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientNom: nom, telephone, wilaya: selectedWilaya?.nom ?? "", wilayaNum: wilayaCode, modeLivraison: mode, note, produits: items.map((i) => ({ nom: i.nom, qty: i.qty, prix: i.prix })), sousTotal: totalPrice, fraisLivraison: frais, total }),
+        body: JSON.stringify({
+          clientNom: nom,
+          telephone,
+          wilaya: selectedLivraison.wilayaNom,
+          wilayaNum: selectedLivraison.wilayaNum,
+          modeLivraison: mode,
+          note,
+          produits: items.map((i) => ({ nom: i.nom, qty: i.qty, prix: i.prix })),
+          sousTotal: totalPrice,
+          fraisLivraison: frais,
+          total,
+        }),
       });
       if (!res.ok) throw new Error();
       const data = (await res.json()) as { waUrl: string };
       clearCart();
       setSuccess(true);
-      setTimeout(() => { window.open(data.waUrl, "_blank"); onClose(); setSuccess(false); }, 800);
+      setTimeout(() => {
+        window.open(data.waUrl, "_blank");
+        onClose();
+        setSuccess(false);
+      }, 800);
     } catch {
       setError("Une erreur est survenue. Veuillez réessayer.");
     } finally {
@@ -63,13 +90,30 @@ export default function OrderModal({ isOpen, onClose }: Props) {
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div className="fixed inset-0 z-[80] bg-noir/30 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
-          <motion.div className="fixed inset-0 z-[90] flex items-center justify-center p-4" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.25 }}>
-            <div className="relative w-full max-w-lg bg-white border border-border max-h-[90vh] overflow-y-auto shadow-xl" onClick={(e) => e.stopPropagation()}>
+          <motion.div
+            className="fixed inset-0 z-[80] bg-noir/30 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          />
+          <motion.div
+            className="fixed inset-0 z-[90] flex items-center justify-center p-4"
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div
+              className="relative w-full max-w-lg bg-white border border-border max-h-[90vh] overflow-y-auto shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Header */}
               <div className="sticky top-0 bg-white flex items-center justify-between px-6 py-4 border-b border-border z-10">
                 <h2 className="font-playfair text-xl text-noir">Confirmer la commande</h2>
-                <button onClick={onClose} className="p-1 text-muted hover:text-noir transition-colors"><X size={18} /></button>
+                <button onClick={onClose} className="p-1 text-muted hover:text-noir transition-colors">
+                  <X size={18} />
+                </button>
               </div>
 
               {success ? (
@@ -104,61 +148,123 @@ export default function OrderModal({ isOpen, onClose }: Props) {
                     </div>
                   </div>
 
-                  {/* Fields */}
+                  {/* Champs */}
                   <div className="space-y-4">
                     <label className="block">
-                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">Prénom &amp; Nom *</span>
-                      <input required value={nom} onChange={(e) => setNom(e.target.value)} autoComplete="name"
-                        className="w-full border border-border bg-blanc px-4 py-2.5 font-jost text-sm text-noir outline-none focus:border-noir transition-colors"
-                        placeholder="Votre nom complet" />
+                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">
+                        Prénom &amp; Nom *
+                      </span>
+                      <input
+                        required
+                        value={nom}
+                        onChange={(e) => setNom(e.target.value)}
+                        autoComplete="name"
+                        className="w-full border border-border bg-blanc px-4 py-3 font-jost text-sm text-noir outline-none focus:border-noir transition-colors"
+                        placeholder="Votre nom complet"
+                      />
                     </label>
+
                     <label className="block">
-                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">Téléphone *</span>
-                      <input required type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} autoComplete="tel"
-                        className="w-full border border-border bg-blanc px-4 py-2.5 font-jost text-sm text-noir outline-none focus:border-noir transition-colors"
-                        placeholder="0791 112 663" />
+                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">
+                        Téléphone *
+                      </span>
+                      <input
+                        required
+                        type="tel"
+                        value={telephone}
+                        onChange={(e) => setTelephone(e.target.value)}
+                        autoComplete="tel"
+                        className="w-full border border-border bg-blanc px-4 py-3 font-jost text-sm text-noir outline-none focus:border-noir transition-colors"
+                        placeholder="0791 112 663"
+                      />
                       <p className="font-jost text-xs text-muted mt-1">Ex : 0791 112 663</p>
                     </label>
+
                     <label className="block">
-                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">Wilaya *</span>
-                      <select required value={wilayaCode} onChange={(e) => setWilayaCode(Number(e.target.value) || "")}
-                        className="w-full border border-border bg-blanc px-4 py-2.5 font-jost text-sm text-noir outline-none focus:border-noir transition-colors">
-                        <option value="">Choisir une wilaya…</option>
-                        {WILAYAS.map((w) => (
-                          <option key={w.code} value={w.code}>{w.code} — {w.nom}</option>
+                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">
+                        Wilaya *
+                      </span>
+                      <select
+                        required
+                        value={wilayaId}
+                        onChange={(e) => setWilayaId(e.target.value)}
+                        className="w-full border border-border bg-blanc px-4 py-3 font-jost text-sm text-noir outline-none focus:border-noir transition-colors"
+                        disabled={loadingWilayas}
+                      >
+                        <option value="">
+                          {loadingWilayas ? "Chargement…" : "Choisir une wilaya…"}
+                        </option>
+                        {livraisons.map((l) => (
+                          <option key={l.id} value={l.id}>
+                            {l.wilayaNum} - {l.wilayaNom}
+                          </option>
                         ))}
                       </select>
+                      {selectedLivraison && (
+                        <p className="font-jost text-xs text-muted mt-1">
+                          Domicile : {selectedLivraison.prixDomicile.toLocaleString("fr-DZ")} DZD
+                          {" · "}
+                          Bureau : {selectedLivraison.prixBureau.toLocaleString("fr-DZ")} DZD
+                        </p>
+                      )}
                     </label>
+
                     <div>
-                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-2 block">Mode de livraison *</span>
+                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-2 block">
+                        Mode de livraison *
+                      </span>
                       <div className="flex gap-3">
                         {(["Domicile", "Bureau"] as Mode[]).map((m) => (
-                          <button key={m} type="button" onClick={() => setMode(m)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 font-jost text-sm border transition-all ${
-                              mode === m ? "border-noir bg-noir text-white" : "border-border text-muted hover:border-noir"
-                            }`}>
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => setMode(m)}
+                            className={`flex-1 flex items-center justify-center gap-2 py-3 font-jost text-sm border transition-all ${
+                              mode === m
+                                ? "border-noir bg-noir text-white"
+                                : "border-border text-muted hover:border-noir"
+                            }`}
+                          >
                             {m === "Domicile" ? <Home size={14} /> : <Building2 size={14} />}
                             {m}
                           </button>
                         ))}
                       </div>
-                      {livraisonRow && (
-                        <p className="font-jost text-xs text-muted mt-1.5">Frais : {frais.toLocaleString("fr-DZ")} DZD</p>
+                      {selectedLivraison && (
+                        <p className="font-jost text-xs text-muted mt-1.5">
+                          Frais sélectionnés : <span className="text-noir font-medium">{frais.toLocaleString("fr-DZ")} DZD</span>
+                        </p>
                       )}
                     </div>
+
                     <label className="block">
-                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">Note (optionnel)</span>
-                      <textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)}
-                        className="w-full border border-border bg-blanc px-4 py-2.5 font-jost text-sm text-noir outline-none focus:border-noir transition-colors resize-none"
-                        placeholder="Instructions de livraison, occasion spéciale…" />
+                      <span className="font-jost text-xs tracking-widest uppercase text-muted mb-1.5 block">
+                        Note (optionnel)
+                      </span>
+                      <textarea
+                        rows={3}
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        className="w-full border border-border bg-blanc px-4 py-3 font-jost text-sm text-noir outline-none focus:border-noir transition-colors resize-none"
+                        placeholder="Instructions de livraison, occasion spéciale…"
+                      />
                     </label>
                   </div>
 
-                  {error && <p className="font-jost text-sm text-rouge text-center">{error}</p>}
+                  {error && (
+                    <p className="font-jost text-sm text-rouge text-center">{error}</p>
+                  )}
 
-                  <button type="submit" disabled={loading}
-                    className="w-full py-3 bg-noir text-white font-jost text-xs tracking-widest uppercase hover:bg-rouge transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                    {loading ? <><Loader2 size={14} className="animate-spin" />Envoi en cours…</> : "Envoyer sur WhatsApp 🌹"}
+                  <button
+                    type="submit"
+                    disabled={loading || loadingWilayas}
+                    className="w-full py-3 bg-noir text-white font-jost text-xs tracking-widest uppercase hover:bg-rouge transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <><Loader2 size={14} className="animate-spin" />Envoi en cours…</>
+                    ) : (
+                      "Envoyer sur WhatsApp 🌹"
+                    )}
                   </button>
                 </form>
               )}
