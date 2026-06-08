@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
@@ -52,12 +53,13 @@ export default function CartDrawer() {
                   <div className="flex flex-col items-center justify-center h-full text-center gap-4 py-16">
                     <span className="text-5xl">🌹</span>
                     <p className="font-cormorant italic text-muted text-xl">Votre panier est vide</p>
-                    <button
+                    <Link
+                      href="/catalogue"
                       onClick={() => setDrawerOpen(false)}
                       className="border border-noir text-noir font-jost text-xs tracking-widest uppercase px-6 py-2 hover:bg-noir hover:text-white transition-all"
                     >
-                      Découvrir le catalogue
-                    </button>
+                      D&eacute;couvrir le catalogue
+                    </Link>
                   </div>
                 ) : (
                   items.map((item) => (
