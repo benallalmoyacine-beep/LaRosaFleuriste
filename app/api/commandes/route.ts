@@ -20,8 +20,9 @@ export async function POST(req: NextRequest) {
   try {
     await createCommande({ clientNom, telephone, wilaya, wilayaNum, modeLivraison, note, produits, sousTotal, fraisLivraison, total });
   } catch (err) {
-    console.error("Airtable write error:", err);
-    return NextResponse.json({ error: "Erreur enregistrement" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("Airtable write error:", msg);
+    return NextResponse.json({ error: "Erreur enregistrement", detail: msg }, { status: 500 });
   }
 
   // Build WhatsApp message

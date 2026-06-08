@@ -70,7 +70,10 @@ export default function OrderModal({ isOpen, onClose }: Props) {
           total,
         }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({})) as { error?: string; detail?: string };
+        throw new Error(errData.detail || errData.error || `HTTP ${res.status}`);
+      }
       const data = (await res.json()) as { waUrl: string };
       clearCart();
       setSuccess(true);
@@ -79,8 +82,9 @@ export default function OrderModal({ isOpen, onClose }: Props) {
         onClose();
         setSuccess(false);
       }, 800);
-    } catch {
-      setError("Une erreur est survenue. Veuillez réessayer.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erreur inconnue";
+      setError(`Erreur : ${msg}`);
     } finally {
       setLoading(false);
     }
