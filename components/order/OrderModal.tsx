@@ -25,6 +25,7 @@ export default function OrderModal({ isOpen, onClose }: Props) {
   const [loadingWilayas, setLoadingWilayas] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [waUrl, setWaUrl] = useState("");
   const [orderRef, setOrderRef] = useState("");
   const [error, setError] = useState("");
 

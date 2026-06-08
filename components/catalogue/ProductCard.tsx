@@ -1,36 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import type { Produit } from "@/types/airtable";
 import ProductOptionsModal from "./ProductOptionsModal";
 import OptionsBadges from "./OptionsBadges";
 
-const DISPO: Record<string, { label: string; cls: string }> = {
-  "En stock": { label: "En stock", cls: "text-vert bg-vert/10" },
-  "Sur commande": { label: "Sur commande", cls: "text-or bg-or/10" },
-  Rupture: { label: "Rupture", cls: "text-muted bg-border" },
-};
-
 export default function ProductCard({ produit }: { produit: Produit }) {
   const { addItem } = useCart();
   const { showToast } = useToast();
-  const dispo = DISPO[produit.disponibilite] ?? DISPO["En stock"];
-  const rupture = produit.disponibilite === "Rupture";
+  const [qty, setQty] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const rupture = produit.disponibilite === "Rupture";
   const hasOptions = (produit.tailles?.length > 0) || (produit.couleurs?.length > 0);
 
+  // Prix affiché
+  const prixActuel = produit.prixPromo ?? produit.prix;
+  const aPromo = !!produit.prixPromo && produit.prixPromo < produit.prix;
+  const remise = aPromo
+    ? Math.round((1 - produit.prixPromo! / produit.prix) * 100)
+    : 0;
+
   const handleAdd = () => {
+    if (rupture) return;
     if (hasOptions) {
       setModalOpen(true);
     } else {
-      addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
+      for (let i = 0; i < qty; i++) {
+        addItem({ id: produit.id, nom: produit.nom, prix: prixActuel, photo: produit.photos[0]?.url });
+      }
       showToast(produit.nom);
     }
   };
@@ -38,94 +41,126 @@ export default function ProductCard({ produit }: { produit: Produit }) {
   const handleConfirm = (taille?: string, couleur?: string) => {
     const variantId = `${produit.id}|${taille ?? ""}|${couleur ?? ""}`;
     const label = [taille, couleur].filter(Boolean).join(" · ");
-    addItem({
-      id: variantId,
-      nom: produit.nom,
-      prix: produit.prix,
-      photo: produit.photos[0]?.url,
-      taille,
-      couleur,
-      details: label || undefined,
-    });
+    for (let i = 0; i < qty; i++) {
+      addItem({
+        id: variantId,
+        nom: produit.nom,
+        prix: prixActuel,
+        photo: produit.photos[0]?.url,
+        taille,
+        couleur,
+        details: label || undefined,
+      });
+    }
     showToast(produit.nom);
     setModalOpen(false);
   };
 
   return (
     <>
-      <motion.article
-        className="group bg-white border border-border hover:border-or/40 transition-all duration-300"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="bg-white border border-border flex flex-col">
+
         {/* Image */}
-        <Link href={`/catalogue/${produit.slug}`} className="block relative aspect-square overflow-hidden bg-blanc">
+        <Link href={`/catalogue/${produit.slug}`} className="relative block aspect-square overflow-hidden bg-blanc">
           {produit.photos[0] ? (
             <Image
               src={produit.photos[0].url}
               alt={produit.nom}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-rose/20 to-border flex items-center justify-center">
-              <span className="text-5xl">🌹</span>
+              <span className="text-4xl">🌹</span>
             </div>
           )}
 
-          {/* Hover overlay */}
-          <div className="absolute inset-0 bg-noir/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-            <span className="font-jost text-xs tracking-widest uppercase text-white bg-noir/70 px-4 py-2">
-              Voir détails
-            </span>
+          {/* Badges sur l'image — haut gauche */}
+          <div className="absolute top-2 left-2 flex flex-col gap-1">
+            {aPromo && (
+              <span className="bg-rouge text-white font-jost font-semibold text-[10px] px-1.5 py-0.5 rounded-sm">
+                -{remise}%
+              </span>
+            )}
+            {produit.nouveau && (
+              <span className="bg-vert text-white font-jost font-semibold text-[10px] px-1.5 py-0.5 rounded-sm">
+                NOUVEAU
+              </span>
+            )}
           </div>
         </Link>
 
-        {/* Info */}
-        <div className="p-2.5 sm:p-4">
-          <span className={`inline-block text-[10px] sm:text-xs px-1.5 py-0.5 font-jost tracking-wide mb-1.5 sm:mb-2 ${dispo.cls}`}>
-            {dispo.label}
-          </span>
+        {/* Infos */}
+        <div className="flex flex-col flex-1 p-2 sm:p-3 gap-1.5">
 
+          {/* Nom */}
           <Link href={`/catalogue/${produit.slug}`}>
-            <h3 className="font-playfair text-noir text-sm sm:text-lg leading-tight group-hover:text-rouge transition-colors mb-0.5 sm:mb-1 line-clamp-2">
+            <h3 className="font-jost text-noir text-xs sm:text-sm leading-tight line-clamp-2 hover:text-rouge transition-colors">
               {produit.nom}
             </h3>
           </Link>
 
-          {produit.description && (
-            <p className="hidden sm:block font-cormorant italic text-muted text-sm leading-relaxed line-clamp-2 mb-2">
-              {produit.description}
-            </p>
-          )}
-
+          {/* Badges taille/couleur */}
           <OptionsBadges produit={produit} size="sm" />
 
-          <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-border mt-1.5 sm:mt-0">
-            <p className="font-playfair text-noir text-sm sm:text-lg">
-              {produit.prix.toLocaleString("fr-DZ")}{" "}
-              <span className="text-[10px] sm:text-xs text-muted">DZD</span>
-            </p>
+          {/* Prix */}
+          <div className="flex items-baseline gap-1.5 mt-auto pt-1">
+            {aPromo ? (
+              <>
+                <span className="font-jost font-semibold text-rouge text-sm sm:text-base">
+                  {produit.prixPromo!.toLocaleString("fr-DZ")}
+                  <span className="text-[10px] ml-0.5">DZD</span>
+                </span>
+                <span className="font-jost text-muted text-xs line-through">
+                  {produit.prix.toLocaleString("fr-DZ")}
+                </span>
+              </>
+            ) : (
+              <span className="font-jost font-semibold text-noir text-sm sm:text-base">
+                {produit.prix.toLocaleString("fr-DZ")}
+                <span className="text-[10px] text-muted ml-0.5">DZD</span>
+              </span>
+            )}
+          </div>
+
+          {/* Qty + Ajouter */}
+          <div className="flex items-center gap-1 mt-1">
+            {/* Contrôles qty */}
+            {!rupture && (
+              <div className="flex items-center border border-border shrink-0">
+                <button
+                  onClick={() => setQty((q) => Math.max(1, q - 1))}
+                  className="w-7 h-7 flex items-center justify-center text-muted hover:text-noir hover:bg-blanc transition-colors"
+                >
+                  <Minus size={10} />
+                </button>
+                <span className="w-6 text-center font-jost text-xs text-noir">{qty}</span>
+                <button
+                  onClick={() => setQty((q) => q + 1)}
+                  className="w-7 h-7 flex items-center justify-center text-muted hover:text-noir hover:bg-blanc transition-colors"
+                >
+                  <Plus size={10} />
+                </button>
+              </div>
+            )}
+
+            {/* Bouton ajouter */}
             <button
               disabled={rupture}
               onClick={handleAdd}
-              className={`flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-jost tracking-wider transition-all min-h-[36px] ${
+              className={`flex-1 h-7 font-jost text-[10px] sm:text-xs tracking-wider uppercase transition-all ${
                 rupture
-                  ? "opacity-30 cursor-not-allowed bg-border text-muted"
+                  ? "bg-border text-muted cursor-not-allowed opacity-50"
                   : "bg-noir text-white hover:bg-rouge"
               }`}
             >
-              <ShoppingCart size={10} className="sm:hidden" />
-              <ShoppingCart size={12} className="hidden sm:block" />
-              <span className="hidden sm:inline">{rupture ? "Indisponible" : "Ajouter"}</span>
-              <span className="sm:hidden">{rupture ? "—" : "+"}</span>
+              {rupture ? "Indisponible" : "Ajouter"}
             </button>
           </div>
+
         </div>
-      </motion.article>
+      </div>
 
       {modalOpen && (
         <ProductOptionsModal

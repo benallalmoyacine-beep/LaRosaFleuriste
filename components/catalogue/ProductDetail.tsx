@@ -26,13 +26,16 @@ export default function ProductDetail({ produit }: { produit: Produit }) {
   const rupture = produit.disponibilite === "Rupture";
 
   const hasOptions = (produit.tailles?.length > 0) || (produit.couleurs?.length > 0);
+  const prixActuel = produit.prixPromo ?? produit.prix;
+  const aPromo = !!produit.prixPromo && produit.prixPromo < produit.prix;
+  const remise = aPromo ? Math.round((1 - produit.prixPromo! / produit.prix) * 100) : 0;
 
   const handleAdd = () => {
     if (hasOptions) {
       setModalOpen(true);
     } else {
       for (let i = 0; i < qty; i++) {
-        addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
+        addItem({ id: produit.id, nom: produit.nom, prix: prixActuel, photo: produit.photos[0]?.url });
       }
       showToast(produit.nom);
     }
@@ -45,7 +48,7 @@ export default function ProductDetail({ produit }: { produit: Produit }) {
       addItem({
         id: variantId,
         nom: produit.nom,
-        prix: produit.prix,
+        prix: prixActuel,
         photo: produit.photos[0]?.url,
         taille,
         couleur,
@@ -100,9 +103,28 @@ export default function ProductDetail({ produit }: { produit: Produit }) {
               <p className={`font-jost text-xs tracking-widest uppercase mb-3 ${dispo.cls}`}>{dispo.label}</p>
               <h1 className="font-playfair text-4xl md:text-5xl text-noir mb-4 leading-tight">{produit.nom}</h1>
               <div className="divider-or max-w-[80px] mb-6" />
-              <p className="font-playfair text-3xl text-noir mb-6">
-                {produit.prix.toLocaleString("fr-DZ")} <span className="text-lg text-muted">DZD</span>
-              </p>
+              <div className="flex flex-wrap items-baseline gap-3 mb-4">
+                {aPromo ? (
+                  <>
+                    <span className="bg-rouge text-white font-jost text-xs px-2 py-0.5 rounded-sm">-{remise}%</span>
+                    <span className="font-playfair text-3xl text-rouge">
+                      {produit.prixPromo!.toLocaleString("fr-DZ")} <span className="text-lg">DZD</span>
+                    </span>
+                    <span className="font-jost text-muted text-lg line-through">
+                      {produit.prix.toLocaleString("fr-DZ")} DZD
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-playfair text-3xl text-noir">
+                    {produit.prix.toLocaleString("fr-DZ")} <span className="text-lg text-muted">DZD</span>
+                  </span>
+                )}
+              </div>
+              {produit.nouveau && (
+                <span className="inline-block bg-vert text-white font-jost text-xs px-2 py-0.5 rounded-sm mb-4">
+                  NOUVEAU
+                </span>
+              )}
               {produit.description && (
                 <p className="font-cormorant italic text-muted text-lg leading-relaxed mb-6">{produit.description}</p>
               )}

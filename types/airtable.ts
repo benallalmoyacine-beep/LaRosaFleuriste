@@ -15,6 +15,8 @@ export interface Produit {
   categorie: string[];       // IDs des catégories liées
   categorieNom?: string;     // résolu après join
   disponibilite: "En stock" | "Sur commande" | "Rupture";
+  prixPromo?: number;   // prix promotionnel (optionnel)
+  nouveau: boolean;     // badge "Nouveau"
   tailles: string[];
   couleurs: string[];
   vitrine: boolean;

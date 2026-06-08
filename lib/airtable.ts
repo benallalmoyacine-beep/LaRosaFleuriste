@@ -77,6 +77,8 @@ export async function getProduits(): Promise<Produit[]> {
     })),
     categorie: field(r, "Categorie", []),
     disponibilite: (field(r, "Disponibilite", "En stock") || "En stock") as Produit["disponibilite"],
+    prixPromo: (field(r, "Prix_Promo", null) as number | null) ?? undefined,
+    nouveau: field(r, "Nouveau", false) as boolean,
     tailles: field(r, "Taille", []) as string[],
     couleurs: field(r, "Couleur", []) as string[],
     vitrine: field(r, "Vitrine", false),

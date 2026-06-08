@@ -1,22 +1,17 @@
-import { getProduits } from "@/lib/airtable";
-import HeroSection from "@/components/home/HeroSection";
-import VitrineDore from "@/components/home/VitrineDore";
-import AvisSection from "@/components/home/AvisSection";
+import { getProduits, getCategories } from "@/lib/airtable";
+import CatalogueClient from "@/components/catalogue/CatalogueClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const produits = await getProduits().catch(() => []);
-
-  const vitrineProds = produits
-    .filter((p) => p.vitrine && p.actif)
-    .sort((a, b) => a.vitrineOrdre - b.vitrineOrdre);
+  const [produits, categories] = await Promise.all([
+    getProduits().catch(() => []),
+    getCategories().catch(() => []),
+  ]);
 
   return (
-    <>
-      <HeroSection />
-      <VitrineDore produits={vitrineProds} />
-      <AvisSection />
-    </>
+    <div className="min-h-screen bg-blanc pt-14 md:pt-20">
+      <CatalogueClient produits={produits} categories={categories} />
+    </div>
   );
 }
