@@ -42,11 +42,8 @@ Réf. #${ref}
 ✅ Commande enregistrée — voir Airtable pour le détail complet.`;
 
   const encoded = encodeURIComponent(message);
-  const numbers = [
-    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER  || "213791112663",
-    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER2 || "213797270128",
-  ];
-  const waUrls = numbers.map((n) => `https://wa.me/${n}?text=${encoded}`);
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "213791112663";
+  const waUrl = `https://wa.me/${number}?text=${encoded}`;
 
-  return NextResponse.json({ waUrls, ref });
+  return NextResponse.json({ waUrl, ref });
 }
