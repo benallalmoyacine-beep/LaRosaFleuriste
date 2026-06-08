@@ -1,5 +1,5 @@
 import { getProduits, getCategories } from "@/lib/airtable";
-import CatalogueClient from "@/components/catalogue/CatalogueClient";
+import HomeClient from "@/components/home/HomeClient";
 
 export const dynamic = "force-dynamic";
 
@@ -9,9 +9,17 @@ export default async function HomePage() {
     getCategories().catch(() => []),
   ]);
 
+  const vitrineProds = produits
+    .filter((p) => p.vitrine && p.actif)
+    .sort((a, b) => a.vitrineOrdre - b.vitrineOrdre);
+
   return (
     <div className="min-h-screen bg-blanc pt-14 md:pt-20">
-      <CatalogueClient produits={produits} categories={categories} />
+      <HomeClient
+        produits={produits}
+        categories={categories}
+        vitrineProds={vitrineProds}
+      />
     </div>
   );
 }
