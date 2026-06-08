@@ -3,17 +3,39 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Étoiles statiquement définies : angle initial, rayon, taille, durée orbite, couleur
+// Étoile 5 branches SVG (comme le logo)
+function StarShape({ size, color }: { size: number; color: string }) {
+  // Polygone étoile 5 branches
+  const points = Array.from({ length: 5 }, (_, i) => {
+    const outer = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+    const inner = outer + Math.PI / 5;
+    const R = size / 2;
+    const r = R * 0.42;
+    return [
+      `${R + R * Math.cos(outer)},${R + R * Math.sin(outer)}`,
+      `${R + r * Math.cos(inner)},${R + r * Math.sin(inner)}`,
+    ];
+  }).flat().join(" ");
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block" }}>
+      <polygon points={points} fill={color} />
+    </svg>
+  );
+}
+
+// Étoiles statiquement définies
 const STARS: { angle: number; radius: number; size: number; duration: number; color: string }[] = [
-  { angle: 0,   radius: 85,  size: 13, duration: 9,  color: "#e8a4b8" },
-  { angle: 72,  radius: 85,  size: 8,  duration: 9,  color: "#c9a84c" },
-  { angle: 144, radius: 85,  size: 11, duration: 9,  color: "#e8a4b8" },
-  { angle: 216, radius: 85,  size: 7,  duration: 9,  color: "#c9a84c" },
-  { angle: 288, radius: 85,  size: 10, duration: 9,  color: "#e8a4b8" },
-  { angle: 20,  radius: 125, size: 7,  duration: 14, color: "#c9a84c" },
-  { angle: 100, radius: 125, size: 9,  duration: 14, color: "#e8a4b8" },
-  { angle: 180, radius: 125, size: 6,  duration: 14, color: "#c9a84c" },
-  { angle: 260, radius: 125, size: 8,  duration: 14, color: "#e8a4b8" },
+  { angle: 0,   radius: 85,  size: 14, duration: 9,  color: "#c9a84c" },
+  { angle: 72,  radius: 85,  size: 10, duration: 9,  color: "#c9a84c" },
+  { angle: 144, radius: 85,  size: 12, duration: 9,  color: "#c9a84c" },
+  { angle: 216, radius: 85,  size: 9,  duration: 9,  color: "#c9a84c" },
+  { angle: 288, radius: 85,  size: 11, duration: 9,  color: "#c9a84c" },
+  { angle: 30,  radius: 118, size: 8,  duration: 14, color: "#e8c97a" },
+  { angle: 102, radius: 118, size: 10, duration: 14, color: "#e8c97a" },
+  { angle: 174, radius: 118, size: 7,  duration: 14, color: "#e8c97a" },
+  { angle: 246, radius: 118, size: 9,  duration: 14, color: "#e8c97a" },
+  { angle: 318, radius: 118, size: 8,  duration: 14, color: "#e8c97a" },
 ];
 
 export default function LoadingScreen() {
@@ -55,27 +77,22 @@ export default function LoadingScreen() {
                   ease: "linear",
                 }}
               >
-                <motion.span
+                <motion.div
                   style={{
                     position: "absolute",
                     left: star.radius,
                     top: 0,
                     transform: "translate(-50%, -50%)",
-                    fontSize: star.size,
-                    color: star.color,
-                    lineHeight: 1,
-                    display: "block",
-                    userSelect: "none",
                   }}
-                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{
                     duration: star.duration / 2,
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
                 >
-                  ✦
-                </motion.span>
+                  <StarShape size={star.size} color={star.color} />
+                </motion.div>
               </motion.div>
             ))}
 
