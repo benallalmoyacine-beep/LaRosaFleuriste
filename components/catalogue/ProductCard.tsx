@@ -51,27 +51,27 @@ export default function ProductCard({ produit }: { produit: Produit }) {
       </Link>
 
       {/* Info */}
-      <div className="p-4">
-        <span className={`inline-block text-xs px-2 py-0.5 font-jost tracking-wider mb-2 ${dispo.cls}`}>
+      <div className="p-2.5 sm:p-4">
+        <span className={`inline-block text-[10px] sm:text-xs px-1.5 py-0.5 font-jost tracking-wide mb-1.5 sm:mb-2 ${dispo.cls}`}>
           {dispo.label}
         </span>
 
         <Link href={`/catalogue/${produit.slug}`}>
-          <h3 className="font-playfair text-noir text-lg leading-tight group-hover:text-rouge transition-colors mb-1">
+          <h3 className="font-playfair text-noir text-sm sm:text-lg leading-tight group-hover:text-rouge transition-colors mb-0.5 sm:mb-1 line-clamp-2">
             {produit.nom}
           </h3>
         </Link>
 
         {produit.description && (
-          <p className="font-cormorant italic text-muted text-sm leading-relaxed line-clamp-2 mb-3">
+          <p className="hidden sm:block font-cormorant italic text-muted text-sm leading-relaxed line-clamp-2 mb-3">
             {produit.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between pt-3 border-t border-border">
-          <p className="font-playfair text-noir text-lg">
+        <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-border mt-1.5 sm:mt-0">
+          <p className="font-playfair text-noir text-sm sm:text-lg">
             {produit.prix.toLocaleString("fr-DZ")}{" "}
-            <span className="text-xs text-muted">DZD</span>
+            <span className="text-[10px] sm:text-xs text-muted">DZD</span>
           </p>
           <button
             disabled={rupture}
@@ -79,14 +79,16 @@ export default function ProductCard({ produit }: { produit: Produit }) {
               addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
               setDrawerOpen(true);
             }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-jost tracking-wider transition-all ${
+            className={`flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-jost tracking-wider transition-all min-h-[36px] ${
               rupture
                 ? "opacity-30 cursor-not-allowed bg-border text-muted"
                 : "bg-noir text-white hover:bg-rouge"
             }`}
           >
-            <ShoppingCart size={12} />
-            {rupture ? "Indisponible" : "Ajouter"}
+            <ShoppingCart size={10} className="sm:hidden" />
+            <ShoppingCart size={12} className="hidden sm:block" />
+            <span className="hidden sm:inline">{rupture ? "Indisponible" : "Ajouter"}</span>
+            <span className="sm:hidden">{rupture ? "—" : "+"}</span>
           </button>
         </div>
       </div>
