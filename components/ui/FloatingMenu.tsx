@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus } from "lucide-react";
+import { X, Share2 } from "lucide-react";
 
 function IconWhatsApp() {
   return (
@@ -131,7 +131,7 @@ export default function FloatingMenu() {
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ duration: 0.25, ease: [0.34, 1.2, 0.64, 1] }}
       >
-        {open ? <X size={20} className="text-noir" /> : <Plus size={20} className="text-noir" />}
+        {open ? <X size={20} className="text-noir" /> : <Share2 size={18} className="text-noir" />}
       </motion.button>
     </div>
   );
