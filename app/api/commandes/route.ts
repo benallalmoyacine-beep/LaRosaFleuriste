@@ -17,39 +17,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
   }
 
+  let recordId: string;
   try {
-    await createCommande({ clientNom, telephone, wilaya, wilayaNum, modeLivraison, note, produits, sousTotal, fraisLivraison, total });
+    recordId = await createCommande({ clientNom, telephone, wilaya, wilayaNum, modeLivraison, note, produits, sousTotal, fraisLivraison, total });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("Airtable write error:", msg);
     return NextResponse.json({ error: "Erreur enregistrement", detail: msg }, { status: 500 });
   }
 
-  // Build WhatsApp message
-  const lignesProduits = produits
-    .map((p) => {
-      const ext = p as { details?: string; taille?: string; couleur?: string };
-      const options = [ext.taille, ext.couleur].filter(Boolean).join(" · ");
-      const ligne = `• ${p.nom} × ${p.qty} → ${(p.prix * p.qty).toLocaleString("fr-DZ")} DZD`;
-      if (options) return `${ligne}\n  ↳ ${options}`;
-      if (ext.details) return `${ligne}\n  ↳ ${ext.details}`;
-      return ligne;
-    })
-    .join("\n");
+  // Référence courte lisible (6 derniers chars de l'ID Airtable)
+  const ref = recordId.slice(-6).toUpperCase();
 
-  const message = `🌹 Nouvelle Commande — La Rosa Fleuriste
+  // Message court — les détails réels sont dans Airtable, pas dans ce message
+  // Le client ne peut rien manipuler d'utile : la commande est déjà enregistrée
+  const message = `🌹 Nouvelle commande — La Rosa Fleuriste
+Réf. #${ref}
 
-👤 Client : ${clientNom}
-📞 Téléphone : ${telephone}
-📍 Wilaya : ${wilayaNum} - ${wilaya}
-🚚 Livraison : ${modeLivraison}
+👤 ${clientNom}
+📞 ${telephone}
+📍 ${wilayaNum} - ${wilaya} (${modeLivraison})
+💰 Total : ${total.toLocaleString("fr-DZ")} DZD${note ? `\n📝 ${note}` : ""}
 
-🛒 Commande :
-${lignesProduits}
-
-Sous-total : ${sousTotal.toLocaleString("fr-DZ")} DZD
-Frais de livraison : ${fraisLivraison.toLocaleString("fr-DZ")} DZD
-💰 Total : ${total.toLocaleString("fr-DZ")} DZD${note ? `\n\n📝 Note : ${note}` : ""}`;
+✅ Commande enregistrée — voir Airtable pour le détail complet.`;
 
   const encoded = encodeURIComponent(message);
   const numbers = [
@@ -58,5 +48,5 @@ Frais de livraison : ${fraisLivraison.toLocaleString("fr-DZ")} DZD
   ];
   const waUrls = numbers.map((n) => `https://wa.me/${n}?text=${encoded}`);
 
-  return NextResponse.json({ waUrls });
+  return NextResponse.json({ waUrls, ref });
 }

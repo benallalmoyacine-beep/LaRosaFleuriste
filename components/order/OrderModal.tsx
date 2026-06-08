@@ -26,6 +26,7 @@ export default function OrderModal({ isOpen, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [waUrls, setWaUrls] = useState<string[]>([]);
+  const [orderRef, setOrderRef] = useState("");
   const [error, setError] = useState("");
 
   // Chargement des wilayas depuis Airtable (via /api/livraison)
@@ -75,9 +76,10 @@ export default function OrderModal({ isOpen, onClose }: Props) {
         const errData = await res.json().catch(() => ({})) as { error?: string; detail?: string };
         throw new Error(errData.detail || errData.error || `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as { waUrls: string[] };
+      const data = (await res.json()) as { waUrls: string[]; ref: string };
       clearCart();
       setWaUrls(data.waUrls);
+      setOrderRef(data.ref ?? "");
       setSuccess(true);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erreur inconnue";
@@ -121,8 +123,14 @@ export default function OrderModal({ isOpen, onClose }: Props) {
                 <div className="flex flex-col items-center justify-center py-12 px-6 gap-5 text-center">
                   <span className="text-5xl">🌹</span>
                   <p className="font-playfair text-2xl text-noir">Commande enregistrée !</p>
+                  {orderRef && (
+                    <div className="border border-or/40 bg-or/5 px-6 py-3">
+                      <p className="font-jost text-[10px] tracking-widest uppercase text-muted mb-1">Référence</p>
+                      <p className="font-playfair text-2xl text-noir tracking-widest">#{orderRef}</p>
+                    </div>
+                  )}
                   <p className="font-cormorant italic text-muted text-base">
-                    Envoyez votre commande sur WhatsApp pour la confirmer.
+                    Cliquez pour notifier La Rosa sur WhatsApp.
                   </p>
                   <div className="flex flex-col gap-3 w-full mt-2">
                     {waUrls.map((url, i) => (
@@ -141,7 +149,7 @@ export default function OrderModal({ isOpen, onClose }: Props) {
                     ))}
                   </div>
                   <button
-                    onClick={() => { setSuccess(false); setWaUrls([]); onClose(); }}
+                    onClick={() => { setSuccess(false); setWaUrls([]); setOrderRef(""); onClose(); }}
                     className="font-jost text-xs text-muted hover:text-noir transition-colors tracking-wider"
                   >
                     Fermer
