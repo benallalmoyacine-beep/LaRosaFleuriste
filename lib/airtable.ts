@@ -105,6 +105,7 @@ export async function getCategories(): Promise<Categorie[]> {
   return raw.map((r) => ({
     id: field(r, "id", ""),
     nom: field(r, "Nom", ""),
+    slug: slugify(field(r, "Nom", field(r, "id", ""))),
     ordre: field(r, "Ordre", 99),
     actif: field(r, "Actif", false),
     image: field(r, "Image", undefined),

@@ -193,22 +193,6 @@ export default function VitrineDore({ produits }: Props) {
           })}
         </div>
 
-        {/* Lien catalogue */}
-        <motion.div
-          className="text-center mt-10 md:mt-14"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <Link
-            href="/catalogue"
-            className="inline-flex items-center gap-3 border border-or text-or font-jost text-xs tracking-widest uppercase px-8 md:px-12 py-3 hover:bg-or hover:text-white transition-all duration-300"
-          >
-            <span className="text-[10px]">✦</span>
-            Voir tout le Catalogue
-            <span className="text-[10px]">✦</span>
-          </Link>
-        </motion.div>
       </div>
     </section>
 

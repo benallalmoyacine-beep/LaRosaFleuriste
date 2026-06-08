@@ -29,6 +29,7 @@ export interface Produit {
 export interface Categorie {
   id: string;
   nom: string;
+  slug: string;
   ordre: number;
   actif: boolean;
   image?: AirtablePhoto[];
