@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/context/ToastContext";
 import type { Produit } from "@/types/airtable";
 
 const DISPO: Record<string, { label: string; cls: string }> = {
@@ -14,7 +15,8 @@ const DISPO: Record<string, { label: string; cls: string }> = {
 };
 
 export default function ProductCard({ produit }: { produit: Produit }) {
-  const { addItem, setDrawerOpen } = useCart();
+  const { addItem } = useCart();
+  const { showToast } = useToast();
   const dispo = DISPO[produit.disponibilite] ?? DISPO["En stock"];
   const rupture = produit.disponibilite === "Rupture";
 
@@ -77,7 +79,7 @@ export default function ProductCard({ produit }: { produit: Produit }) {
             disabled={rupture}
             onClick={() => {
               addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
-              setDrawerOpen(true);
+              showToast(produit.nom);
             }}
             className={`flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-jost tracking-wider transition-all min-h-[36px] ${
               rupture

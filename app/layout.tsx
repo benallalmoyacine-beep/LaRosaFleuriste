@@ -2,28 +2,29 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Playfair_Display, Jost, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
+import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
-import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import FloatingMenu from "@/components/ui/FloatingMenu";
 import LoadingScreen from "@/components/ui/LoadingScreen";
-import { CartProvider } from "@/context/CartContext";
+import Providers from "@/components/layout/Providers";
 import CartDrawer from "@/components/cart/CartDrawer";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
 });
 
 const jost = Jost({
   variable: "--font-jost",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["300", "400", "500", "600"],
 });
 
@@ -60,15 +61,19 @@ export default function RootLayout({
       lang="fr"
       className={`${cormorant.variable} ${playfair.variable} ${jost.variable} ${vibes.variable}`}
     >
+      <head>
+        <meta charSet="utf-8" />
+      </head>
       <body className="bg-blanc text-noir font-jost min-h-screen antialiased">
-        <CartProvider>
+        <Providers>
           <LoadingScreen />
           <Navbar />
           <CartDrawer />
-          <main>{children}</main>
+          <main className="pb-16 md:pb-0">{children}</main>
           <Footer />
-          <WhatsAppButton />
-        </CartProvider>
+          <BottomNav />
+          <FloatingMenu />
+        </Providers>
       </body>
     </html>
   );

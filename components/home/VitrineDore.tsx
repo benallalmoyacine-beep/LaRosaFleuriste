@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/context/ToastContext";
 import type { Produit } from "@/types/airtable";
 
 interface Props {
@@ -17,7 +18,8 @@ const DISPO: Record<string, { label: string; cls: string }> = {
 };
 
 export default function VitrineDore({ produits }: Props) {
-  const { addItem, setDrawerOpen } = useCart();
+  const { addItem } = useCart();
+  const { showToast } = useToast();
 
   if (produits.length === 0) return null;
 
@@ -144,7 +146,7 @@ export default function VitrineDore({ produits }: Props) {
                           <button
                             onClick={() => {
                               addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
-                              setDrawerOpen(true);
+                              showToast(produit.nom);
                             }}
                             className="px-2 md:px-3 py-1 md:py-1.5 bg-noir text-white text-[9px] md:text-xs font-jost tracking-wider hover:bg-rouge transition-all min-h-[28px]"
                           >
