@@ -37,6 +37,11 @@ export const metadata: Metadata = {
   title: "La Rosa Fleuriste — Tlemcen",
   description:
     "Boutique florale à Tlemcen, Algérie. Livraison de fleurs, bouquets sur mesure, arrangements floraux. Une passion de famille.",
+  icons: {
+    icon: "/logo.jpg",
+    apple: "/logo.jpg",
+    shortcut: "/logo.jpg",
+  },
   openGraph: {
     title: "La Rosa Fleuriste — Tlemcen",
     description: "Boutique florale à Tlemcen. Livraison de fleurs & bouquets sur mesure.",
