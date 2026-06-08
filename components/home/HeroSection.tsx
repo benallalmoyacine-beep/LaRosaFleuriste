@@ -55,10 +55,8 @@ export default function HeroSection() {
           variants={line}
           className="font-playfair text-5xl md:text-6xl lg:text-7xl text-noir leading-[1.1] mb-6"
         >
-          Des fleurs pour{" "}
-          <em className="font-cormorant not-italic text-rouge">chaque moment</em>
-          <br />
-          de votre vie.
+          Quand les mots manquent,{" "}
+          <em className="font-cormorant not-italic text-rouge">les fleurs parlent.</em>
         </motion.h1>
 
         {/* Ligne or animée */}
