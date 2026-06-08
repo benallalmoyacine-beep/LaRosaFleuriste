@@ -9,6 +9,7 @@ import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import type { Produit } from "@/types/airtable";
 import ProductOptionsModal from "./ProductOptionsModal";
+import OptionsBadges from "./OptionsBadges";
 
 const DISPO: Record<string, { label: string; cls: string }> = {
   "En stock": { label: "En stock", cls: "text-vert bg-vert/10" },
@@ -101,21 +102,7 @@ export default function ProductCard({ produit }: { produit: Produit }) {
             </p>
           )}
 
-          {/* Badges tailles/couleurs */}
-          {(produit.tailles?.length > 0 || produit.couleurs?.length > 0) && (
-            <div className="hidden sm:flex flex-wrap gap-1 mb-3">
-              {produit.tailles?.map((t) => (
-                <span key={t} className="font-jost text-[10px] px-1.5 py-0.5 border border-border text-muted">
-                  {t}
-                </span>
-              ))}
-              {produit.couleurs?.map((c) => (
-                <span key={c} className="font-jost text-[10px] px-1.5 py-0.5 border border-border text-muted">
-                  {c}
-                </span>
-              ))}
-            </div>
-          )}
+          <OptionsBadges produit={produit} size="sm" />
 
           <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-border mt-1.5 sm:mt-0">
             <p className="font-playfair text-noir text-sm sm:text-lg">

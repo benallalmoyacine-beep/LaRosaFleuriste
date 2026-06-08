@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import type { Produit } from "@/types/airtable";
+import OptionsBadges from "@/components/catalogue/OptionsBadges";
+import ProductOptionsModal from "@/components/catalogue/ProductOptionsModal";
 
 interface Props {
   produits: Produit[];
@@ -20,10 +23,39 @@ const DISPO: Record<string, { label: string; cls: string }> = {
 export default function VitrineDore({ produits }: Props) {
   const { addItem } = useCart();
   const { showToast } = useToast();
+  const [modalProduit, setModalProduit] = useState<Produit | null>(null);
 
   if (produits.length === 0) return null;
 
+  const handleAdd = (produit: Produit) => {
+    const hasOptions = produit.tailles?.length > 0 || produit.couleurs?.length > 0;
+    if (hasOptions) {
+      setModalProduit(produit);
+    } else {
+      addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
+      showToast(produit.nom);
+    }
+  };
+
+  const handleConfirm = (taille?: string, couleur?: string) => {
+    if (!modalProduit) return;
+    const variantId = `${modalProduit.id}|${taille ?? ""}|${couleur ?? ""}`;
+    const label = [taille, couleur].filter(Boolean).join(" · ");
+    addItem({
+      id: variantId,
+      nom: modalProduit.nom,
+      prix: modalProduit.prix,
+      photo: modalProduit.photos[0]?.url,
+      taille,
+      couleur,
+      details: label || undefined,
+    });
+    showToast(modalProduit.nom);
+    setModalProduit(null);
+  };
+
   return (
+  <>
     <section className="py-16 md:py-24 bg-[#faf8f5] relative overflow-hidden">
       {/* Ornement fond doré subtil */}
       <div className="absolute inset-0 pointer-events-none">
@@ -125,12 +157,14 @@ export default function VitrineDore({ produits }: Props) {
                     </h3>
 
                     {produit.description && (
-                      <p className="hidden md:block font-cormorant italic text-muted text-sm leading-relaxed line-clamp-2 mb-3">
+                      <p className="hidden md:block font-cormorant italic text-muted text-sm leading-relaxed line-clamp-2 mb-2">
                         {produit.description}
                       </p>
                     )}
 
-                    <div className="flex items-center justify-between pt-2 md:pt-3 border-t border-or/15 mt-1.5 md:mt-0 gap-1">
+                    <OptionsBadges produit={produit} size="sm" />
+
+                    <div className="flex items-center justify-between pt-2 md:pt-3 border-t border-or/15 mt-2 gap-1">
                       <p className="font-playfair text-noir text-sm md:text-xl">
                         {produit.prix.toLocaleString("fr-DZ")}
                         <span className="text-[9px] md:text-sm text-muted ml-0.5">DZD</span>
@@ -144,10 +178,7 @@ export default function VitrineDore({ produits }: Props) {
                         </Link>
                         {!rupture && (
                           <button
-                            onClick={() => {
-                              addItem({ id: produit.id, nom: produit.nom, prix: produit.prix, photo: produit.photos[0]?.url });
-                              showToast(produit.nom);
-                            }}
+                            onClick={() => handleAdd(produit)}
                             className="px-2 md:px-3 py-1 md:py-1.5 bg-noir text-white text-[9px] md:text-xs font-jost tracking-wider hover:bg-rouge transition-all min-h-[28px]"
                           >
                             +
@@ -180,5 +211,14 @@ export default function VitrineDore({ produits }: Props) {
         </motion.div>
       </div>
     </section>
+
+    {modalProduit && (
+      <ProductOptionsModal
+        produit={modalProduit}
+        onConfirm={handleConfirm}
+        onClose={() => setModalProduit(null)}
+      />
+    )}
+  </>
   );
 }
