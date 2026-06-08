@@ -51,8 +51,12 @@ Sous-total : ${sousTotal.toLocaleString("fr-DZ")} DZD
 Frais de livraison : ${fraisLivraison.toLocaleString("fr-DZ")} DZD
 💰 Total : ${total.toLocaleString("fr-DZ")} DZD${note ? `\n\n📝 Note : ${note}` : ""}`;
 
-  const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "213791112663";
-  const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+  const encoded = encodeURIComponent(message);
+  const numbers = [
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER  || "213791112663",
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER2 || "213797270128",
+  ];
+  const waUrls = numbers.map((n) => `https://wa.me/${n}?text=${encoded}`);
 
-  return NextResponse.json({ waUrl });
+  return NextResponse.json({ waUrls });
 }

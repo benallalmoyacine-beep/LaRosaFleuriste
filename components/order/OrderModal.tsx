@@ -74,11 +74,14 @@ export default function OrderModal({ isOpen, onClose }: Props) {
         const errData = await res.json().catch(() => ({})) as { error?: string; detail?: string };
         throw new Error(errData.detail || errData.error || `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as { waUrl: string };
+      const data = (await res.json()) as { waUrls: string[] };
       clearCart();
       setSuccess(true);
       setTimeout(() => {
-        window.open(data.waUrl, "_blank");
+        // Ouvrir les deux numéros WhatsApp
+        data.waUrls.forEach((url, i) => {
+          setTimeout(() => window.open(url, "_blank"), i * 600);
+        });
         onClose();
         setSuccess(false);
       }, 800);
