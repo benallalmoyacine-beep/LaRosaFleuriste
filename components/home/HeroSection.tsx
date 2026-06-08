@@ -75,9 +75,9 @@ export default function HeroSection() {
         >
           <Link
             href="/catalogue"
-            className="inline-flex items-center justify-center px-8 py-3 bg-noir text-white font-jost text-xs tracking-widest uppercase hover:bg-rouge transition-all duration-300"
+            className="inline-flex items-center justify-center px-8 py-3 bg-rose text-noir font-jost text-xs tracking-widest uppercase hover:bg-rose/80 transition-all duration-300"
           >
-            Découvrir le Catalogue
+            D&#233;couvrir nos cr&#233;ations
           </Link>
           <a
             href="https://wa.me/213791112663"
