@@ -5,7 +5,6 @@ import Navbar from "@/components/layout/Navbar";
 import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
 import FloatingMenu from "@/components/ui/FloatingMenu";
-import GlobalPetals from "@/components/ui/GlobalPetals";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import Providers from "@/components/layout/Providers";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -67,7 +66,6 @@ export default function RootLayout({
       </head>
       <body className="bg-blanc text-noir font-jost min-h-screen antialiased">
         <Providers>
-          <GlobalPetals />
           <LoadingScreen />
           <Navbar />
           <CartDrawer />

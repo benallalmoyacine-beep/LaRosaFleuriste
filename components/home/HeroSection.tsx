@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
+import PetalAnimation from "@/components/ui/PetalAnimation";
 
 const container: Variants = {
   hidden: {},
@@ -17,6 +18,9 @@ const line: Variants = {
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen bg-blanc flex items-center justify-center overflow-hidden">
+      {/* Pétales bordeaux tombants */}
+      <PetalAnimation count={22} />
+
       {/* Ligne décorative gauche */}
       <motion.div
         className="absolute left-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3"
