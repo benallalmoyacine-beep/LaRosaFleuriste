@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import type { Metadata } from "next";
 import { getConfig } from "@/lib/airtable";
 import { MapPin, Phone, Clock } from "lucide-react";

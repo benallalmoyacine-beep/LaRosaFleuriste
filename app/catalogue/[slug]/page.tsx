@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { getProduits, getProduitBySlug } from "@/lib/airtable";
 import ProductDetail from "@/components/catalogue/ProductDetail";
 import { notFound } from "next/navigation";

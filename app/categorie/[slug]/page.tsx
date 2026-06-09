@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { getProduits, getCategories } from "@/lib/airtable";
 import ProductCard from "@/components/catalogue/ProductCard";
 import Link from "next/link";

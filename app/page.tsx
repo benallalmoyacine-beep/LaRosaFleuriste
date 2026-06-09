@@ -1,6 +1,7 @@
 import { getProduits, getCategories } from "@/lib/airtable";
 import HomeClient from "@/components/home/HomeClient";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
