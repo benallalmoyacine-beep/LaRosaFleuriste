@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { getLivraison } from "@/lib/airtable";
 import { NextResponse } from "next/server";
 

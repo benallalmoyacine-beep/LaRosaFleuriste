@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { createCommande } from "@/lib/airtable";
 import { NextRequest, NextResponse } from "next/server";
 import type { CommandeInput } from "@/types/airtable";
