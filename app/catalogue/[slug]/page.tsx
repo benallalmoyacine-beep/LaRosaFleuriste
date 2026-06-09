@@ -1,13 +1,10 @@
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
-import { getProduits, getProduitBySlug } from "@/lib/airtable";
+import { getProduitBySlug } from "@/lib/airtable";
 import ProductDetail from "@/components/catalogue/ProductDetail";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 60;
-export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -21,11 +18,6 @@ export async function generateMetadata({
     title: `${produit.nom} — La Rosa Fleuriste`,
     description: produit.description || `Découvrez ${produit.nom} chez La Rosa Fleuriste à Tlemcen.`,
   };
-}
-
-export async function generateStaticParams() {
-  const produits = await getProduits().catch(() => []);
-  return produits.map((p) => ({ slug: p.slug }));
 }
 
 export default async function ProductPage({
